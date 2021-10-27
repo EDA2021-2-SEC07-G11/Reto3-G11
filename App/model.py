@@ -30,6 +30,7 @@ from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.DataStructures import orderedmapstructure as om
 assert cf
 
 """
@@ -39,12 +40,41 @@ los mismos.
 
 # Construccion de modelos
 
-# Funciones para agregar informacion al catalogo
+def newCatalog():
+    catalog = {'ciudades': None, 'avistamientos' : None
+                }
+    catalog['ciudades'] = om.newMap(omaptype='RBT',comparefunction=compareCities)
+    catalog['avistamientos'] = lt.newList("ARRAY_LIST")
+    
+    return catalog
 
+# Funciones para agregar informacion al catalogo
+def agregarAvistamiento(catalog, avistamiento):
+    avistamientos = catalog['avistamientos']
+    lt.addLast(avistamientos,avistamiento)
+    ciudad = avistamiento['city']
+    mapa = catalog['ciudades']
+    if om.contains(mapa, ciudad):
+        valor = om.get(mapa, ciudad)
+        entrada = me.getValue(valor)
+        lt.addLast(entrada, avistamiento)
+    else:
+        lista = lt.newList('ARRAY_LIST')
+        lt.addLast(lista, avistamiento)
+        om.put(mapa, ciudad, lista)
 # Funciones para creacion de datos
 
 # Funciones de consulta
 
+
+
+
 # Funciones utilizadas para comparar elementos dentro de una lista
+
+def compareCities(c1, c2):
+    if c1 > c2:
+        return True
+    else:
+        return False
 
 # Funciones de ordenamiento

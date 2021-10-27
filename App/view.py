@@ -24,6 +24,7 @@ import config as cf
 import sys
 import controller
 from DISClib.ADT import list as lt
+from DISClib.DataStructures import orderedmapstructure as om
 assert cf
 
 
@@ -36,8 +37,13 @@ operación solicitada
 
 def printMenu():
     print("Bienvenido")
-    print("1- Cargar información en el catálogo")
-    print("2- ")
+    print("1- Crear el catálogo")
+    print("2- Cargar información en el catálogo")
+    print("3- Contar los avistamientos en una ciudad")
+    print("4- Contar los avistamientos por su duración")
+    print("5- Contar los avistamientos en un rango de tiempo")
+    print("6- Contar los avistamientos en un rango de fechas")
+    print("7- Contar los avistamientos en una zona geográfica")
 
 catalog = None
 
@@ -48,10 +54,21 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
-        print("Cargando información de los archivos ....")
+        print("Creando catálogo...")
+        catalog = controller.initCatalog()
+        print("Catálogo creado con éxito")
 
     elif int(inputs[0]) == 2:
-        pass
+        print("Cargando información en el catálogo...")
+        controller.loadData(catalog)
+        lista = catalog['avistamientos']
+        print('Se han cargado '+str(lt.size(lista))+" avistamientos")
+
+    elif int(inputs[0])==3:
+        altura = om.height(catalog['ciudades'])
+        peso = om.size(catalog['ciudades'])
+        print("El mapa de ciudades contiene "+ str(peso)+ " ciudades")
+        print("La altura de este mapa es "+str(altura))
 
     else:
         sys.exit(0)
