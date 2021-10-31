@@ -42,11 +42,11 @@ los mismos.
 # Construccion de modelos
 
 def newCatalog():
-    catalog = {'ciudades': None, 'avistamientos' : None, 'duracion' : None, 'fechas': None
-                }
+    catalog = {'ciudades': None, 'avistamientos' : None, 'duracion' : None, 'fechas': None, 'longitud': None}
     catalog['ciudades'] = om.newMap(omaptype='RBT',comparefunction=compareCities)
     catalog['duracion'] = om.newMap(omaptype='RBT',comparefunction=compareDuration)
     catalog['fechas'] = om.newMap(omaptype='RBT',comparefunction=compareDates)
+    catalog['longitud'] = om.newMap(omaptype='RBT',comparefunction=compareLongitudes)
     catalog['avistamientos'] = lt.newList("ARRAY_LIST")
     return catalog
 
@@ -58,6 +58,7 @@ def agregarAvistamiento(catalog, avistamiento):
     agregarCiudad(catalog, avistamiento)
     agregarDuracion(catalog, avistamiento)
     agregarFecha(catalog, avistamiento)
+    agregarLongitud(catalog, avistamiento)
     
 
 def agregarCiudad(catalog, avistamiento):
@@ -95,6 +96,31 @@ def agregarFecha(catalog, avistamiento):
         lista = lt.newList('ARRAY_LIST')
         lt.addLast(lista, avistamiento)
         om.put(mapa, fecha, lista)
+
+def agregarLongitud(catalog, avistamiento):
+    longitud = float(avistamiento['longitude'])
+    longitud = round(longitud,2)
+    mapa = catalog['longitud']
+    if om.contains(mapa, longitud):
+        valor = om.get(mapa, longitud)
+        entrada = me.getValue(valor)
+        agregarLatitud(entrada, avistamiento)
+    else:
+        mapa1 = om.newMap(omaptype='RBT',comparefunction=compareLatitudes)
+        agregarLatitud(mapa1, avistamiento)
+        om.put(mapa, longitud, mapa1)
+
+def agregarLatitud(mapa, avistamiento):
+    latitud = float(avistamiento['latitude'])
+    latitud = round(latitud,2)
+    if om.contains(mapa, latitud):
+        valor = om.get(mapa, latitud)
+        entrada = me.getValue(valor)
+        lt.addLast(entrada, avistamiento)
+    else:
+        lista = lt.newList('ARRAY_LIST')
+        lt.addLast(lista, avistamiento)
+        om.put(mapa, latitud, lista)
 
 
 # Funciones para creacion de datos
@@ -193,38 +219,77 @@ def listaDuraciones(raiz, lista):
 def darAvistamientosFechas(catalog, inf, sup):
     fechas = catalog['fechas']
     mapa = om.newMap(omaptype='RBT',comparefunction=compareDates)
-    return darDuracion(fechas['root'], inf, sup, mapa) 
+    return darFechas(fechas['root'], inf, sup, mapa) 
 
 def darFechas(fecha, inf, sup, mapa):
     if fecha['key'] < inf:
         if fecha['right'] != None:
-            mapa = darDuracion(fecha['right'], inf, sup, mapa)
+            mapa = darFechas(fecha['right'], inf, sup, mapa)
     elif fecha['key'] > sup:
         if fecha['left'] != None:
-            mapa = darDuracion(fecha['left'], inf, sup, mapa)
+            mapa = darFechas(fecha['left'], inf, sup, mapa)
     else:
         if fecha['left'] != None:
-            mapa = darDuracion(fecha['left'],inf,sup,mapa)
+            mapa = darFechas(fecha['left'],inf,sup,mapa)
         
         om.put(mapa, fecha['key'], fecha['value'])
 
         if fecha['right'] != None:
-            mapa = darDuracion(fecha['right'],inf,sup,mapa)
+            mapa = darFechas(fecha['right'],inf,sup,mapa)
 
     return mapa
 
 def listaFechas(raiz, lista):
     if(raiz['left'] != None):
-        lista = listaDuraciones(raiz['left'], lista)
+        lista = listaFechas(raiz['left'], lista)
     
     valor = raiz['value']
     for ufo in lt.iterator(valor):
         lt.addLast(lista, ufo)
 
     if(raiz['right'] != None):
-        lista = listaDuraciones(raiz['right'], lista)
+        lista = listaFechas(raiz['right'], lista)
     
     return lista
+
+def darAvistamientosZona(catalog, longInf, longSup, latInf, latSup):
+    longitudes = catalog['longitud']
+    mapa = om.newMap(omaptype='RBT',comparefunction=compareDates)
+    mapa = darLongitudes(longitudes['root'], longInf, longSup, mapa) 
+
+def darLongitudes(longitud, inf, sup, mapa):
+    if longitud['key'] < inf:
+        if longitud['right'] != None:
+            mapa = darLongitudes(longitud['right'], inf, sup, mapa)
+    elif longitud['key'] > sup:
+        if longitud['left'] != None:
+            mapa = darLongitudes(longitud['left'], inf, sup, mapa)
+    else:
+        if longitud['left'] != None:
+            mapa = darLongitudes(longitud['left'],inf,sup,mapa)
+        
+        om.put(mapa, longitud['key'], longitud['value'])
+
+        if longitud['right'] != None:
+            mapa = darLongitudes(longitud['right'],inf,sup,mapa)
+
+    return mapa
+
+
+
+def listaFechas(raiz, lista):
+    if(raiz['left'] != None):
+        lista = listaFechas(raiz['left'], lista)
+    
+    valor = raiz['value']
+    for ufo in lt.iterator(valor):
+        lt.addLast(lista, ufo)
+
+    if(raiz['right'] != None):
+        lista = listaFechas(raiz['right'], lista)
+    
+    return lista
+
 
 
 
@@ -256,6 +321,22 @@ def compareDates(d1, d2):
     if d1 > d2:
         return 1
     elif d1 < d2:
+        return -1
+    else:
+        return 0
+
+def compareLongitudes(l1, l2):
+    if l1 > l2:
+        return 1
+    elif l1 < l2:
+        return -1
+    else:
+        return 0
+
+def compareLatitudes(l1, l2):
+    if l1 > l2:
+        return 1
+    elif l1 < l2:
         return -1
     else:
         return 0
