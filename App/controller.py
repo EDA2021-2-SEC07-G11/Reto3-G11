@@ -47,3 +47,9 @@ def loadData(catalog):
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo
+
+def darAvistamientosCiudad(catalog, ciudad):
+    return model.darAvistamientosCiudad(catalog, ciudad)
+
+def darInfoReq1(lista):
+    return model.infoReq1(lista)

@@ -25,6 +25,7 @@ import sys
 import controller
 from DISClib.ADT import list as lt
 from DISClib.DataStructures import orderedmapstructure as om
+from tabulate import tabulate
 assert cf
 
 
@@ -65,10 +66,30 @@ while True:
         print('Se han cargado '+str(lt.size(lista))+" avistamientos")
 
     elif int(inputs[0])==3:
-        altura = om.height(catalog['ciudades'])
+        ciudad = input('Ingrese la ciudad que desea consultar: ')
         peso = om.size(catalog['ciudades'])
-        print("El mapa de ciudades contiene "+ str(peso)+ " ciudades")
-        print("La altura de este mapa es "+str(altura))
+        print("Hay "+ str(peso)+ " ciudades que tienen avistamientos de UFOs")
+        listaCiudad = controller.darAvistamientosCiudad(catalog, ciudad)
+        if listaCiudad != False:
+            info = controller.darInfoReq1(listaCiudad)
+            print('Hay un total de '+str(lt.size(listaCiudad))+' avistamientos en '+ciudad)
+            print('Los primeros y últimos 3 avistamientos en '+ciudad+ ' son:')
+            print(tabulate(info, headers=['datetime', 'city','country','duration (seconds)','shape'], tablefmt='fancy_grid'))
+        else:
+            print('Esta ciudad no se encuentra en la base de datos')
+    
+    elif int(inputs[0])==4:
+        inf = input('Ingrese la duración mínima del avistamiento: ')
+        if(inf.isnumeric() == False):
+            print('Ha ingresado una duración inicial inválida')
+        else:
+            inf = float(inf)
+            sup = input('Ingrese la duración máxima del avistamiento: ')
+            if(inf.isnumeric() == False or float(sup) < inf):
+                print('Ha ingresado una duración final inválida')
+            else: 
+                return True
+        
 
     else:
         sys.exit(0)
