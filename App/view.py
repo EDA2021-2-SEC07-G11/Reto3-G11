@@ -20,6 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+
 import config as cf
 import sys
 import controller
@@ -101,6 +102,34 @@ while True:
             print(tabulate(info, headers=['datetime', 'city','country','duration (seconds)','shape'], tablefmt='fancy_grid'))
         except ValueError:
             print('La última duración ingresada es inválida')
+
+    elif int(inputs[0])==6:
+        inicio=input("Ingrese el año inicial de compra en formato AAAA-MM-DD: ")
+        formato = inicio.split('-')
+        if (len(formato) != 3 or len(formato[0]) != 4 or len(formato[1]) != 2 or len(formato[2]) != 2 
+        or formato[0].isnumeric() == False or formato[1].isnumeric() == False or formato[2].isnumeric() == False):
+            print('Ha ingresado una fecha inicial inválida')
+        else:
+            fin = input('Ingrese el año final de compra en formato AAAA-MM-DD: ')
+            formato = fin.split('-')
+            if (len(formato) != 3 or len(formato[0]) != 4 or len(formato[1]) != 2 or len(formato[2]) != 2 
+            or formato[0].isnumeric() == False or formato[1].isnumeric() == False or formato[2].isnumeric() == False or inicio > fin):
+                print('Ha ingresado una fecha final inválida')
+            else: 
+                fechaMinima = om.minKey(catalog['fechas'])
+                valor = om.get(catalog['fechas'], fechaMinima)
+                lista = me.getValue(valor)
+                print('Hay '+str(om.size(catalog['fechas']))+' fechas diferentes para los avistamientos')
+                print('Los avistamientos más viejos ocurrieron en: ')
+                datos=[[fechaMinima, lt.size(lista)]]
+                print(tabulate(datos, headers=['date', 'count'], tablefmt='fancy_grid'))
+                mapa = controller.darMapaRangoFechas(catalog, inicio, fin)
+                listaFechas = lt.newList('ARRAY_LIST')
+                listaFechas = controller.darListaFechas(mapa['root'], listaFechas)
+                info = controller.darInfoReq2(listaFechas)
+                print('Hay un total de '+str(lt.size(listaFechas))+' avistamientos entre '+inicio+' y '+fin)
+                print('Los primeros y últimos 3 avistamientos en el rango son:')
+                print(tabulate(info, headers=['datetime', 'city','country','duration (seconds)','shape'], tablefmt='fancy_grid'))
             
 
         

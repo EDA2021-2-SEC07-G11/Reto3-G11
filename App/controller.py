@@ -60,6 +60,12 @@ def darInfoReq2(lista):
 def darMapaRangoDuracion(catalog, inf, sup):
     return model.darAvistamientosDuraciones(catalog, inf, sup)
 
+def darMapaRangoFechas(catalog, inf, sup):
+    return model.darAvistamientosFechas(catalog, inf, sup)
+
 def darListaDuraciones(raiz, lista):
     return model.listaDuraciones(raiz, lista)
+
+def darListaFechas(raiz, lista):
+    return model.listaFechas(raiz, lista)
 
