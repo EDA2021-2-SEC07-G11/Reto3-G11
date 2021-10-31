@@ -53,3 +53,13 @@ def darAvistamientosCiudad(catalog, ciudad):
 
 def darInfoReq1(lista):
     return model.infoReq1(lista)
+
+def darInfoReq2(lista):
+    return model.infoReq2(lista)
+
+def darMapaRangoDuracion(catalog, inf, sup):
+    return model.darAvistamientosDuraciones(catalog, inf, sup)
+
+def darListaDuraciones(raiz, lista):
+    return model.listaDuraciones(raiz, lista)
+

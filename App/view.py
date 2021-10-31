@@ -26,6 +26,7 @@ import controller
 from DISClib.ADT import list as lt
 from DISClib.DataStructures import orderedmapstructure as om
 from tabulate import tabulate
+from DISClib.DataStructures import mapentry as me
 assert cf
 
 
@@ -80,15 +81,28 @@ while True:
     
     elif int(inputs[0])==4:
         inf = input('Ingrese la duración mínima del avistamiento: ')
-        if(inf.isnumeric() == False):
-            print('Ha ingresado una duración inicial inválida')
-        else:
+        try:
             inf = float(inf)
             sup = input('Ingrese la duración máxima del avistamiento: ')
-            if(inf.isnumeric() == False or float(sup) < inf):
-                print('Ha ingresado una duración final inválida')
-            else: 
-                return True
+            sup = float(sup)
+            duracionMaxima = om.maxKey(catalog['duracion'])
+            valor = om.get(catalog['duracion'], duracionMaxima)
+            lista = me.getValue(valor)
+            print('Hay '+str(om.size(catalog['duracion']))+' duraciones diferentes para los avistamientos')
+            print('La duración máxima de los avistamientos es: ')
+            datos=[[duracionMaxima, lt.size(lista)]]
+            print(tabulate(datos, headers=['duration (seconds)', 'count'], tablefmt='fancy_grid'))
+            mapa = controller.darMapaRangoDuracion(catalog, inf, sup)
+            listaDuraciones = lt.newList('ARRAY_LIST')
+            listaDuraciones = controller.darListaDuraciones(mapa['root'], listaDuraciones)
+            info = controller.darInfoReq2(listaDuraciones)
+            print('Hay un total de '+str(lt.size(listaDuraciones))+' avistamientos entre '+str(inf)+' y '+str(sup)+' segundos.')
+            print('Los primeros y últimos 3 avistamientos en el rango de duración son:')
+            print(tabulate(info, headers=['datetime', 'city','country','duration (seconds)','shape'], tablefmt='fancy_grid'))
+        except ValueError:
+            print('La última duración ingresada es inválida')
+            
+
         
 
     else:

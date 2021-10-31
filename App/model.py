@@ -117,6 +117,25 @@ def infoReq1(lista):
             datos.append(infoUFOReq1(ufo))
     return datos
 
+def infoReq2(lista):
+    n = lt.size(lista)
+    datos = []
+    if n >= 7:
+        k = 1
+        while k <4:
+            ufo = lt.getElement(lista, k)
+            datos.append(infoUFOReq1(ufo))
+            k +=1
+        k = n-2
+        while k <= n:
+            ufo = lt.getElement(lista, k)
+            datos.append(infoUFOReq1(ufo))
+            k +=1
+    else:
+        for ufo in lt.iterator(lista):
+            datos.append(infoUFOReq1(ufo))
+    return datos
+
 
 def infoUFOReq1(ufo):
     return ufo['datetime'], ufo['city'], ufo['country'], ufo['duration (seconds)'], ufo['shape']
@@ -127,10 +146,12 @@ def darAvistamientosDuraciones(catalog, inf, sup):
     return darDuracion(duraciones['root'], inf, sup, mapa)
 
 def darDuracion(duracion, inf, sup, mapa):
-    if duracion['key'] < inf and duracion['right'] != None:
-        mapa = darDuracion(duracion['right'], inf, sup, mapa)
-    elif duracion['key'] > sup and duracion['left'] != None:
-        mapa = darDuracion(duracion['left'], inf, sup, mapa)
+    if duracion['key'] < inf:
+        if duracion['right'] != None:
+            mapa = darDuracion(duracion['right'], inf, sup, mapa)
+    elif duracion['key'] > sup:
+        if duracion['left'] != None:
+            mapa = darDuracion(duracion['left'], inf, sup, mapa)
     else:
         if duracion['left'] != None:
             mapa = darDuracion(duracion['left'],inf,sup,mapa)
@@ -141,6 +162,22 @@ def darDuracion(duracion, inf, sup, mapa):
             mapa = darDuracion(duracion['right'],inf,sup,mapa)
 
     return mapa
+
+def listaDuraciones(raiz, lista):
+    if(raiz['left'] != None):
+        lista = listaDuraciones(raiz['left'], lista)
+    
+    valor = raiz['value']
+    for ufo in lt.iterator(valor):
+        lt.addLast(lista, ufo)
+
+    if(raiz['right'] != None):
+        lista = listaDuraciones(raiz['right'], lista)
+    
+    return lista
+    
+
+
 
 
 
