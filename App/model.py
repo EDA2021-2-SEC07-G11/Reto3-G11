@@ -280,7 +280,6 @@ def darAvistamientosZona(catalog, longInf, longSup, latInf, latSup):
     return darLongitudes(longitudes['root'], longInf, longSup, latInf, latSup, mapa) 
 
 def darLongitudes(longitud, inf, sup, latInf, latSup, mapa):
-    print('va a buscar en rango '+str(inf)+' y '+str(sup)+' para la llave '+str(longitud['key']))
     if longitud['key'] < inf:
         if longitud['right'] != None:
             mapa = darLongitudes(longitud['right'], inf, sup, latInf, latSup, mapa)
