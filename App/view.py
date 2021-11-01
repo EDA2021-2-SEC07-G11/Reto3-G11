@@ -20,7 +20,6 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
-
 import config as cf
 import sys
 import controller
@@ -130,7 +129,29 @@ while True:
                 print('Hay un total de '+str(lt.size(listaFechas))+' avistamientos entre '+inicio+' y '+fin)
                 print('Los primeros y últimos 3 avistamientos en el rango son:')
                 print(tabulate(info, headers=['datetime', 'city','country','duration (seconds)','shape'], tablefmt='fancy_grid'))
+
+    elif int(inputs[0]) == 7:
+        latInf = input('Ingrese la latitud inferior de la zona aproximada a dos cifras decimales: ')
+        try:
+            latInf = round(float(latInf), 2)
+            latSup = input('Ingrese la latitud superior de la zona aproximada a dos cifras decimales: ')
+            latSup = round(float(latSup), 2)
+            longInf = input('Ingrese la longitud inferior de la zona aproximada a dos cifras decimales: ')
+            longInf = round(float(longInf), 2)
+            longSup = input('Ingrese la longitud superior de la zona aproximada a dos cifras decimales: ')
+            longSup = round(float(longSup), 2)
+            mapa = controller.darMapaCoordenadas(catalog, longInf, longSup,latInf, latSup)
+            listaZonas = lt.newList('ARRAY_LIST')
+            listaZonas = controller.darListaZonas(mapa['root'], listaZonas)
+            info = controller.darInfoReq6(listaZonas)
+            print('Hay un total de '+str(lt.size(listaZonas))+' avistamientos en el área ingresada')
+            print('Los primeros y últimos 5 avistamientos en el rango son:')
+            print(tabulate(info, headers=['datetime', 'city','country','duration (seconds)','shape','latitude','longitude'], tablefmt='fancy_grid'))
             
+            
+        except ValueError:
+            print('La última coordenada ingresada es inválida')
+
 
         
 

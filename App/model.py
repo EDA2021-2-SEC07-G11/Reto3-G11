@@ -176,9 +176,31 @@ def infoReq2(lista):
             datos.append(infoUFOReq1(ufo))
     return datos
 
+def infoReq6(lista):
+    n = lt.size(lista)
+    datos = []
+    if n >= 11:
+        k = 1
+        while k <6:
+            ufo = lt.getElement(lista, k)
+            datos.append(infoUFOReq6(ufo))
+            k +=1
+        k = n-4
+        while k <= n:
+            ufo = lt.getElement(lista, k)
+            datos.append(infoUFOReq6(ufo))
+            k +=1
+    else:
+        for ufo in lt.iterator(lista):
+            datos.append(infoUFOReq6(ufo))
+    return datos
+
 
 def infoUFOReq1(ufo):
     return ufo['datetime'], ufo['city'], ufo['country'], ufo['duration (seconds)'], ufo['shape']
+
+def infoUFOReq6(ufo):
+    return ufo['datetime'], ufo['city'], ufo['country'], ufo['duration (seconds)'], ufo['shape'], ufo['latitude'], ufo['longitude']
 
 def darAvistamientosDuraciones(catalog, inf, sup):
     duraciones = catalog['duracion']
@@ -254,30 +276,54 @@ def listaFechas(raiz, lista):
 
 def darAvistamientosZona(catalog, longInf, longSup, latInf, latSup):
     longitudes = catalog['longitud']
-    mapa = om.newMap(omaptype='RBT',comparefunction=compareDates)
-    mapa = darLongitudes(longitudes['root'], longInf, longSup, mapa) 
+    mapa = om.newMap(omaptype='RBT',comparefunction=compareLatitudes)
+    return darLongitudes(longitudes['root'], longInf, longSup, latInf, latSup, mapa) 
 
-def darLongitudes(longitud, inf, sup, mapa):
+def darLongitudes(longitud, inf, sup, latInf, latSup, mapa):
+    print('va a buscar en rango '+str(inf)+' y '+str(sup)+' para la llave '+str(longitud['key']))
     if longitud['key'] < inf:
         if longitud['right'] != None:
-            mapa = darLongitudes(longitud['right'], inf, sup, mapa)
+            mapa = darLongitudes(longitud['right'], inf, sup, latInf, latSup, mapa)
     elif longitud['key'] > sup:
         if longitud['left'] != None:
-            mapa = darLongitudes(longitud['left'], inf, sup, mapa)
+            mapa = darLongitudes(longitud['left'], inf, sup, latInf, latSup, mapa)
     else:
         if longitud['left'] != None:
-            mapa = darLongitudes(longitud['left'],inf,sup,mapa)
+            mapa = darLongitudes(longitud['left'],inf, sup, latInf, latSup, mapa)
         
-        om.put(mapa, longitud['key'], longitud['value'])
+        mapa = darLatitudes(longitud['value']['root'],latInf, latSup, mapa)
 
         if longitud['right'] != None:
-            mapa = darLongitudes(longitud['right'],inf,sup,mapa)
+            mapa = darLongitudes(longitud['right'],inf, sup, latInf, latSup, mapa)
+
+    return mapa
+
+def darLatitudes(latitud, inf, sup, mapa):
+    if latitud['key'] < inf:
+        if latitud['right'] != None:
+            mapa = darLatitudes(latitud['right'], inf, sup, mapa)
+    elif latitud['key'] > sup:
+        if latitud['left'] != None:
+            mapa = darLatitudes(latitud['left'], inf, sup, mapa)
+    else:
+        if latitud['left'] != None:
+            mapa = darLatitudes(latitud['left'],inf,sup,mapa)
+        
+        if om.contains(mapa, latitud['key']):
+            valor = om.get(mapa, latitud)
+            entrada = me.getValue(valor)
+            for i in lt.iterator(latitud['value']):
+                lt.addLast(entrada, i)
+        else:
+            om.put(mapa, latitud['key'], latitud['value'])
+
+        if latitud['right'] != None:
+            mapa = darLatitudes(latitud['right'],inf,sup,mapa)
 
     return mapa
 
 
-
-def listaFechas(raiz, lista):
+def listaZonas(raiz, lista):
     if(raiz['left'] != None):
         lista = listaFechas(raiz['left'], lista)
     
