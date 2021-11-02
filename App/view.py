@@ -28,6 +28,7 @@ from DISClib.DataStructures import orderedmapstructure as om
 from tabulate import tabulate
 from DISClib.DataStructures import mapentry as me
 assert cf
+import time
 
 
 """
@@ -68,6 +69,7 @@ while True:
 
     elif int(inputs[0])==3:
         ciudad = input('Ingrese la ciudad que desea consultar: ')
+        start_time = time.process_time()
         peso = om.size(catalog['ciudades'])
         print("Hay "+ str(peso)+ " ciudades que tienen avistamientos de UFOs")
         listaCiudad = controller.darAvistamientosCiudad(catalog, ciudad)
@@ -78,6 +80,9 @@ while True:
             print(tabulate(info, headers=['datetime', 'city','country','duration (seconds)','shape'], tablefmt='fancy_grid'))
         else:
             print('Esta ciudad no se encuentra en la base de datos')
+        stop_time = time.process_time()
+        elapsed_time_mseg = (stop_time - start_time)*1000
+        print(elapsed_time_mseg)
     
     elif int(inputs[0])==4:
         inf = input('Ingrese la duración mínima del avistamiento: ')
@@ -85,6 +90,7 @@ while True:
             inf = float(inf)
             sup = input('Ingrese la duración máxima del avistamiento: ')
             sup = float(sup)
+            start_time = time.process_time()
             duracionMaxima = om.maxKey(catalog['duracion'])
             valor = om.get(catalog['duracion'], duracionMaxima)
             lista = me.getValue(valor)
@@ -101,20 +107,24 @@ while True:
             print(tabulate(info, headers=['datetime', 'city','country','duration (seconds)','shape'], tablefmt='fancy_grid'))
         except ValueError:
             print('La última duración ingresada es inválida')
+        stop_time = time.process_time()
+        elapsed_time_mseg = (stop_time - start_time)*1000
+        print(elapsed_time_mseg)
 
     elif int(inputs[0])==6:
-        inicio=input("Ingrese el año inicial de compra en formato AAAA-MM-DD: ")
+        inicio=input("Ingrese la fecha inicial del avistamiento en formato AAAA-MM-DD: ")
         formato = inicio.split('-')
         if (len(formato) != 3 or len(formato[0]) != 4 or len(formato[1]) != 2 or len(formato[2]) != 2 
         or formato[0].isnumeric() == False or formato[1].isnumeric() == False or formato[2].isnumeric() == False):
             print('Ha ingresado una fecha inicial inválida')
         else:
-            fin = input('Ingrese el año final de compra en formato AAAA-MM-DD: ')
+            fin = input('Ingrese la fecha final del avistamiento en formato AAAA-MM-DD: ')
             formato = fin.split('-')
             if (len(formato) != 3 or len(formato[0]) != 4 or len(formato[1]) != 2 or len(formato[2]) != 2 
             or formato[0].isnumeric() == False or formato[1].isnumeric() == False or formato[2].isnumeric() == False or inicio > fin):
                 print('Ha ingresado una fecha final inválida')
             else: 
+                start_time = time.process_time()
                 fechaMinima = om.minKey(catalog['fechas'])
                 valor = om.get(catalog['fechas'], fechaMinima)
                 lista = me.getValue(valor)
@@ -129,6 +139,9 @@ while True:
                 print('Hay un total de '+str(lt.size(listaFechas))+' avistamientos entre '+inicio+' y '+fin)
                 print('Los primeros y últimos 3 avistamientos en el rango son:')
                 print(tabulate(info, headers=['datetime', 'city','country','duration (seconds)','shape'], tablefmt='fancy_grid'))
+                stop_time = time.process_time()
+                elapsed_time_mseg = (stop_time - start_time)*1000
+                print(elapsed_time_mseg)
 
     elif int(inputs[0]) == 7:
         latInf = input('Ingrese la latitud inferior de la zona aproximada a dos cifras decimales: ')
@@ -140,6 +153,7 @@ while True:
             longInf = round(float(longInf), 2)
             longSup = input('Ingrese la longitud superior de la zona aproximada a dos cifras decimales: ')
             longSup = round(float(longSup), 2)
+            start_time = time.process_time()
             mapa = controller.darMapaCoordenadas(catalog, longInf, longSup,latInf, latSup)
             listaZonas = lt.newList('ARRAY_LIST')
             listaZonas = controller.darListaZonas(mapa['root'], listaZonas)
@@ -151,7 +165,9 @@ while True:
             
         except ValueError:
             print('La última coordenada ingresada es inválida')
-
+        stop_time = time.process_time()
+        elapsed_time_mseg = (stop_time - start_time)*1000
+        print(elapsed_time_mseg)
 
         
 

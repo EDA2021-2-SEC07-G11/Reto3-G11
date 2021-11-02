@@ -309,7 +309,7 @@ def darLatitudes(latitud, inf, sup, mapa):
             mapa = darLatitudes(latitud['left'],inf,sup,mapa)
         
         if om.contains(mapa, latitud['key']):
-            valor = om.get(mapa, latitud)
+            valor = om.get(mapa, latitud['key'])
             entrada = me.getValue(valor)
             for i in lt.iterator(latitud['value']):
                 lt.addLast(entrada, i)
