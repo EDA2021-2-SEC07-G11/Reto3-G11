@@ -144,14 +144,14 @@ while True:
                 print(elapsed_time_mseg)
 
     elif int(inputs[0]) == 7:
-        latInf = input('Ingrese la latitud inferior de la zona aproximada a dos cifras decimales: ')
+        latInf = input('Ingrese la latitud inferior de la zona, aproximada a dos cifras decimales: ')
         try:
             latInf = round(float(latInf), 2)
-            latSup = input('Ingrese la latitud superior de la zona aproximada a dos cifras decimales: ')
+            latSup = input('Ingrese la latitud superior de la zona, aproximada a dos cifras decimales: ')
             latSup = round(float(latSup), 2)
-            longInf = input('Ingrese la longitud inferior de la zona aproximada a dos cifras decimales: ')
+            longInf = input('Ingrese la longitud inferior de la zona, aproximada a dos cifras decimales: ')
             longInf = round(float(longInf), 2)
-            longSup = input('Ingrese la longitud superior de la zona aproximada a dos cifras decimales: ')
+            longSup = input('Ingrese la longitud superior de la zona, aproximada a dos cifras decimales: ')
             longSup = round(float(longSup), 2)
             start_time = time.process_time()
             mapa = controller.darMapaCoordenadas(catalog, longInf, longSup,latInf, latSup)
