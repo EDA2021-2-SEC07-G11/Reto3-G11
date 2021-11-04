@@ -169,8 +169,6 @@ while True:
         elapsed_time_mseg = (stop_time - start_time)*1000
         print(elapsed_time_mseg)
 
-        
-
     else:
         sys.exit(0)
 sys.exit(0)
