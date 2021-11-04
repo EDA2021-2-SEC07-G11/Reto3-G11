@@ -53,6 +53,8 @@ def newCatalog():
 # Funciones para agregar informacion al catalogo
 
 def agregarAvistamiento(catalog, avistamiento):
+    avistamiento['latitude'] = round(float(avistamiento['latitude']),2)
+    avistamiento['longitude'] = round(float(avistamiento['longitude']),2)
     avistamientos = catalog['avistamientos']
     lt.addLast(avistamientos,avistamiento)
     agregarCiudad(catalog, avistamiento)
@@ -98,8 +100,7 @@ def agregarFecha(catalog, avistamiento):
         om.put(mapa, fecha, lista)
 
 def agregarLongitud(catalog, avistamiento):
-    longitud = float(avistamiento['longitude'])
-    longitud = round(longitud,2)
+    longitud = avistamiento['longitude']
     mapa = catalog['longitud']
     if om.contains(mapa, longitud):
         valor = om.get(mapa, longitud)
@@ -111,8 +112,7 @@ def agregarLongitud(catalog, avistamiento):
         om.put(mapa, longitud, mapa1)
 
 def agregarLatitud(mapa, avistamiento):
-    latitud = float(avistamiento['latitude'])
-    latitud = round(latitud,2)
+    latitud = avistamiento['latitude']
     if om.contains(mapa, latitud):
         valor = om.get(mapa, latitud)
         entrada = me.getValue(valor)
