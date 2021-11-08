@@ -30,7 +30,6 @@ from DISClib.DataStructures import mapentry as me
 assert cf
 import time
 
-
 """
 La vista se encarga de la interacción con el usuario
 Presenta el menu de opciones y por cada seleccion

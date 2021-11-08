@@ -334,15 +334,7 @@ def listaZonas(raiz, lista):
         lista = listaFechas(raiz['right'], lista)
     
     return lista
-
-
-
-
-
-
-
-    
-    
+ 
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 

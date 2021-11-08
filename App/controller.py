@@ -39,7 +39,7 @@ def loadData(catalog):
     """
     Carga los datos de los archivos CSV en el modelo
     """
-    UFOfile = cf.data_dir + 'UFOS/UFOS-utf8-large.csv'
+    UFOfile = cf.data_dir + 'UFOS/UFOS-utf8-5pct.csv'
     input_file = csv.DictReader(open(UFOfile, encoding='utf-8'))
     for avistamiento in input_file:
         model.agregarAvistamiento(catalog, avistamiento)
